@@ -1,12 +1,10 @@
-# Japanese-Food-Blog-Web-App
+# Culinary-Blog-Web-App
 
-This repo contains the source code for the website J Food Blogger. It is a blog web app that aims to allow people to share their favourite japanese food experiences.
 
 ## Features
 - Personal profile.  
 - Image upload.  
-- Authentication.  
-- Admin user privilages (delete content on website).   
+- Authentication.    
 - Blog posts.  
 - Comments.  
 - Edit blog posts, comments.
