@@ -1,37 +1,38 @@
 //Requiring packages
-var express          = require("express"),
-    app              = express(),
-    bodyParser       = require("body-parser"),
+var express = require("express"),
+    app = express(),
+    bodyParser = require("body-parser"),
     expressSanitizer = require("express-sanitizer"),
-    mongoose         = require("mongoose"),
+    mongoose = require("mongoose"),
     // seedDB           = require("./seed"),
-    passport         = require("passport"),
-    LocalStrategy    = require("passport-local"),
-    methodOverride   = require("method-override"),
-    flash            = require("connect-flash");
-    cookieParser     = require("cookie-parser");
-    j_food           = require("./models/j_food"),
-    Comment          = require("./models/comment"),
-    User             = require("./models/user")
-    process.env.PORT = 3000
-    
+    passport = require("passport"),
+    LocalStrategy = require("passport-local"),
+    methodOverride = require("method-override"),
+    flash = require("connect-flash");
+cookieParser = require("cookie-parser");
+j_food = require("./models/j_food");
+Comment = require("./models/comment");
+User = require("./models/user");
+const http = require('http');
+const port = process.env.PORT || 1337;
+
+
 //requiring routes
-var commentRoutes    = require("./routes/comments"),
+var commentRoutes = require("./routes/comments"),
     j_foodRoutes = require("./routes/j_foods"),
-    indexRoutes      = require("./routes/index");
+    indexRoutes = require("./routes/index");
 
 //Using packages
 var url = process.env.DATAURL || "mongodb://localhost/j_food";
 mongoose.connect(url)// testing database
 //mongoose.connect("mongodb://localhost/j_food");
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressSanitizer());
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
 app.use(cookieParser('secret'));
-
 
 
 //PASSPORT CONFIGURATION
@@ -48,20 +49,27 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use(function(req, res, next){
-   res.locals.currentUser = req.user;
-   res.locals.success = req.flash('success');
-   res.locals.error = req.flash('error');
-   next();
+app.use(function (req, res, next) {
+    res.locals.currentUser = req.user;
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
 });
 
 //Use routes
 app.use(indexRoutes);
-app.use("/posts", j_foodRoutes);
-app.use("/posts/:id/comments", commentRoutes);
+app.use("/j_foods", j_foodRoutes);
+app.use("/j_foods/:id/comments", commentRoutes);
 
-
+/*
 //PORT to listen for request
-app.listen(process.env.PORT, process.env.POST, function() {
+app.listen(process.env.PORT, process.env.POST, function () {
     console.log("App Server has Started!!!");
 });
+ */
+
+http.createServer().listen(process.env.PORT, function () {
+    console.log("App Server has Started!!!");
+});
+
+app.listen(port);
